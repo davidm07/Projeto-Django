@@ -39,3 +39,12 @@ def FilmeById(request, pk):
     if request.method == 'DELETE':
         filme.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+@api_view(['GET'])
+def getFilmeByGenero(request, genero):
+    filmes = Filme.objects.filter(genero__icontains=genero)
+    if not filmes:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = serializers.FilmeSerializer(filmes, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
